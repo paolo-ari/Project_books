@@ -76,6 +76,51 @@ def add_book(books):
     save_books(books)
     print(f"Книга '{title}' успешно добавлена!")
 
+def list_books(books):
+    """Выводит список всех книг."""
+    print("\n--- ВСЕ КНИГИ ---")
+    if not books:
+        print("Список книг пуст.")
+        return
+
+    for i, book in enumerate(books, 1):
+        print(f"{i}. {book['title']} — {book['author']}")
+        print(f"   Оценка: {book['rating']}")
+        print(f"   Дата прочтения: {book.get('date_read', 'не указана')}")
+        print()
+
+def average_rating(books):
+    """Рассчитывает и выводит среднюю оценку всех книг."""
+    print("\n--- СРЕДНЯЯ ОЦЕНКА ---")
+    if not books:
+        print("Нет книг для расчёта средней оценки.")
+        return
+
+    total_rating = sum(book['rating'] for book in books)
+    avg = total_rating / len(books)
+    print(f"Средняя оценка: {avg:.2f} из 5")
+
+def author_stats(books):
+    """Выводит статистику по авторам."""
+    print("\n--- СТАТИСТИКА ПО АВТОРАМ ---")
+    if not books:
+        print("Нет данных для статистики.")
+        return
+
+    author_count = {}
+    for book in books:
+        author = book['author']
+        if author in author_count:
+            author_count[author] += 1
+        else:
+            author_count[author] = 1
+
+    # Сортировка по убыванию количества книг
+    sorted_authors = sorted(author_count.items(), key=lambda x: x[1], reverse=True)
+
+    for author, count in sorted_authors:
+        print(f"{author}: {count} книга(и)")
+
 def main():
     books = load_books()
 
@@ -97,19 +142,13 @@ def main():
             add_book(books)
 
         elif choice == '2':
-            print("→ Реализация в ветке feature/list-and-stats")
-            # Здесь будет вывод всех книг
-            pass
+            list_books(books)
 
         elif choice == '3':
-            print("→ Реализация в ветке feature/list-and-stats")
-            # Здесь будет расчёт и вывод средней оценки
-            pass
+            average_rating(books)
 
         elif choice == '4':
-            print("→ Реализация в ветке feature/list-and-stats")
-            # Здесь будет статистика по авторам
-            pass
+            author_stats(books)
 
         elif choice == '5':
             print("→ Реализация в ветке feature/delete")
