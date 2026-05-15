@@ -121,6 +121,51 @@ def author_stats(books):
     for author, count in sorted_authors:
         print(f"{author}: {count} книга(и)")
 
+def delete_book(books):
+    """Удаляет книгу по индексу или по автору и названию."""
+    print("\n--- УДАЛЕНИЕ КНИГИ ---")
+    if not books:
+        print("Список книг пуст. Удалять нечего.")
+        return
+
+    print("Выберите способ удаления:")
+    print("1. По индексу в списке")
+    print("2. По автору и названию")
+
+    choice = input("Ваш выбор (1 или 2): ").strip()
+
+    if choice == '1':
+        # Удаление по индексу
+        try:
+            index = int(input("Введите номер книги для удаления (1–{}): ".format(len(books)))) - 1
+            if 0 <= index < len(books):
+                removed_book = books.pop(index)
+                save_books(books)
+                print(f"Книга '{removed_book['title']}' успешно удалена!")
+            else:
+                print("Ошибка: номер вне диапазона.")
+        except ValueError:
+            print("Ошибка: введите целое число.")
+
+    elif choice == '2':
+        # Удаление по автору и названию
+        author = input("Введите автора: ").strip()
+        title = input("Введите название книги: ").strip()
+
+        found = False
+        for i, book in enumerate(books):
+            if book['author'].lower() == author.lower() and book['title'].lower() == title.lower():
+                books.pop(i)
+                save_books(books)
+                print(f"Книга '{title}' успешно удалена!")
+                found = True
+                break
+
+        if not found:
+            print("Книга с такими автором и названием не найдена.")
+    else:
+        print("Неверный выбор. Используйте 1 или 2.")
+
 def main():
     books = load_books()
 
@@ -151,9 +196,7 @@ def main():
             author_stats(books)
 
         elif choice == '5':
-            print("→ Реализация в ветке feature/delete")
-            # Здесь будет удаление книги
-            pass
+            delete_book(books)
 
         elif choice == '6':
             print("Выход из программы. До свидания!")
