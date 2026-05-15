@@ -35,6 +35,47 @@ def save_books(books):
     except IOError as e:
         print(f"Ошибка при сохранении файла: {e}")
 
+def add_book(books):
+    """Добавляет новую книгу с валидацией данных и проверкой дубликатов."""
+    print("\n--- ДОБАВЛЕНИЕ НОВОЙ КНИГИ ---")
+
+    author = input("Введите автора: ").strip()
+    title = input("Введите название книги: ").strip()
+
+    # Проверка на дубликат (автор + название)
+    for book in books:
+        if book['author'].lower() == author.lower() and book['title'].lower() == title.lower():
+            print("Ошибка: Книга с таким автором и названием уже существует!")
+            return
+
+    # Валидация оценки (1–5)
+    while True:
+        rating_input = input("Введите оценку (1–5): ").strip()
+        try:
+            rating = int(rating_input)
+            if 1 <= rating <= 5:
+                break
+            else:
+                print("Ошибка: Оценка должна быть числом от 1 до 5.")
+        except ValueError:
+            print("Ошибка: Введите целое число от 1 до 5.")
+
+    # Ввод даты
+    date_read = input("Введите дату прочтения (YYYY-MM-DD): ").strip()
+
+    # Создание новой книги
+    new_book = {
+        'author': author,
+        'title': title,
+        'rating': rating,
+        'date_read': date_read
+    }
+
+    # Добавление в список и сохранение
+    books.append(new_book)
+    save_books(books)
+    print(f"Книга '{title}' успешно добавлена!")
+
 def main():
     books = load_books()
 
@@ -53,9 +94,7 @@ def main():
         choice = input("Выберите пункт меню (1–6): ").strip()
 
         if choice == '1':
-            print("→ Реализация в ветке feature/add-book")
-            # Здесь будет вызов функции добавления книги
-            pass
+            add_book(books)
 
         elif choice == '2':
             print("→ Реализация в ветке feature/list-and-stats")
